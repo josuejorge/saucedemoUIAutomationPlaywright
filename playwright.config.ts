@@ -6,7 +6,10 @@ export default defineConfig({
   expect: { timeout: 5_000 },
   fullyParallel: true,
   retries: 0,
-  reporter: 'html',
+  reporter: [
+    ['html'],
+    ['./reporters/evidence-reporter.ts'],
+  ],
   use: {
     baseURL: 'https://www.saucedemo.com',
     trace: 'on-first-retry',

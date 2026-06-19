@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../../fixtures';
 import { LoginPage } from '../../pages/LoginPage';
 import { HomePage } from '../../pages/HomePage';
 
@@ -15,54 +15,82 @@ test.describe('Login Page', () => {
     await loginPage.navigate();
   });
 
-  test('Validar que site abre com sucesso', async ({ page }) => {
-    await expect(page).toHaveURL('https://www.saucedemo.com/');
-    await expect(loginPage.logo).toBeVisible();
-    await expect(loginPage.logo).toHaveText('Swag Labs');
-    await expect(loginPage.usernameInput).toBeVisible();
-    await expect(loginPage.passwordInput).toBeVisible();
-    await expect(loginPage.loginButton).toBeVisible();
+  test('Validar que site abre com sucesso', async ({ page, step }) => {
+    await step('Validar URL da página de login', async () => {
+      await expect(page).toHaveURL('https://www.saucedemo.com/');
+    });
+
+    await step('Validar logo Swag Labs visível', async () => {
+      await expect(loginPage.logo).toBeVisible();
+      await expect(loginPage.logo).toHaveText('Swag Labs');
+    });
+
+    await step('Validar campos de login visíveis', async () => {
+      await expect(loginPage.usernameInput).toBeVisible();
+      await expect(loginPage.passwordInput).toBeVisible();
+      await expect(loginPage.loginButton).toBeVisible();
+    });
   });
 
-  test('Validar Login Com Sucesso', async ({ page }) => {
-    await loginPage.login(VALID_USER, VALID_PASSWORD);
+  test('Validar Login Com Sucesso', async ({ page, step }) => {
+    await step('Realizar login com credenciais válidas', async () => {
+      await loginPage.login(VALID_USER, VALID_PASSWORD);
+    });
 
-    await expect(page).toHaveURL(/.*inventory\.html/);
+    await step('Validar redirecionamento para a home', async () => {
+      await expect(page).toHaveURL(/.*inventory\.html/);
+    });
   });
 
-  test('Validar Login Com Falha', async ({ page }) => {
-    await loginPage.login(VALID_USER, WRONG_PASSWORD);
+  test('Validar Login Com Falha', async ({ step }) => {
+    await step('Tentar login com senha incorreta', async () => {
+      await loginPage.login(VALID_USER, WRONG_PASSWORD);
+    });
 
-    await expect(loginPage.errorMessage).toBeVisible();
-    await expect(loginPage.errorMessage).toContainText(
-      'Username and password do not match any user in this service'
-    );
+    await step('Validar mensagem de erro de credencial inválida', async () => {
+      await expect(loginPage.errorMessage).toBeVisible();
+      await expect(loginPage.errorMessage).toContainText(
+        'Username and password do not match any user in this service'
+      );
+    });
   });
 
-  test('Validar Login Com Campos Vazios', async () => {
-    await loginPage.loginButton.click();
+  test('Validar Login Com Campos Vazios', async ({ step }) => {
+    await step('Clicar em login sem preencher campos', async () => {
+      await loginPage.loginButton.click();
+    });
 
-    await expect(loginPage.errorMessage).toBeVisible();
-    await expect(loginPage.errorMessage).toContainText('Username is required');
+    await step('Validar mensagem de campo obrigatório', async () => {
+      await expect(loginPage.errorMessage).toBeVisible();
+      await expect(loginPage.errorMessage).toContainText('Username is required');
+    });
   });
 
-  test('Validar Login Com Usuario Bloqueado', async () => {
-    await loginPage.login(LOCKED_USER, VALID_PASSWORD);
+  test('Validar Login Com Usuario Bloqueado', async ({ step }) => {
+    await step('Tentar login com usuário bloqueado', async () => {
+      await loginPage.login(LOCKED_USER, VALID_PASSWORD);
+    });
 
-    await expect(loginPage.errorMessage).toBeVisible();
-    await expect(loginPage.errorMessage).toContainText(
-      'Sorry, this user has been locked out'
-    );
+    await step('Validar mensagem de usuário bloqueado', async () => {
+      await expect(loginPage.errorMessage).toBeVisible();
+      await expect(loginPage.errorMessage).toContainText('Sorry, this user has been locked out');
+    });
   });
 
-  test('Validar Logout', async ({ page }) => {
-    await loginPage.login(VALID_USER, VALID_PASSWORD);
-    await expect(page).toHaveURL(/.*inventory\.html/);
+  test('Validar Logout', async ({ page, step }) => {
+    await step('Realizar login com credenciais válidas', async () => {
+      await loginPage.login(VALID_USER, VALID_PASSWORD);
+      await expect(page).toHaveURL(/.*inventory\.html/);
+    });
 
-    const homePage = new HomePage(page);
-    await homePage.logout();
+    await step('Abrir menu e clicar em logout', async () => {
+      const homePage = new HomePage(page);
+      await homePage.logout();
+    });
 
-    await expect(page).toHaveURL('https://www.saucedemo.com/');
-    await expect(loginPage.loginButton).toBeVisible();
+    await step('Validar retorno à tela de login', async () => {
+      await expect(page).toHaveURL('https://www.saucedemo.com/');
+      await expect(loginPage.loginButton).toBeVisible();
+    });
   });
 });
