@@ -16,6 +16,7 @@ export class HomePage {
   readonly productPrices: Locator;
   readonly productImages: Locator;
   readonly addToCartButtons: Locator;
+  readonly removeFromCartButtons: Locator;
 
   // Ordenação e carrinho
   readonly sortDropdown: Locator;
@@ -34,7 +35,8 @@ export class HomePage {
     this.productNames       = page.locator('.inventory_item_name');
     this.productPrices      = page.locator('.inventory_item_price');
     this.productImages      = page.locator('.inventory_item_img img');
-    this.addToCartButtons   = page.locator('.btn_inventory');
+    this.addToCartButtons        = page.locator('[data-test^="add-to-cart"]');
+    this.removeFromCartButtons   = page.locator('[data-test^="remove"]');
 
     this.sortDropdown = page.locator('[data-test="product-sort-container"]');
     this.cartBadge    = page.locator('.shopping_cart_badge');
