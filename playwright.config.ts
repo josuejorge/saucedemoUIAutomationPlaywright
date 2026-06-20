@@ -8,6 +8,7 @@ export default defineConfig({
   retries: 0,
   reporter: [
     ['html'],
+    ['allure-playwright'],
     ['./reporters/evidence-reporter.ts'],
   ],
   use: {
