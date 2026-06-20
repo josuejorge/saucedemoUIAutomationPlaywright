@@ -1,14 +1,11 @@
 import { test, expect } from '../../fixtures';
-import { LoginPage } from '../../pages/LoginPage';
 import { HomePage } from '../../pages/HomePage';
 import { CartPage } from '../../pages/CartPage';
 import { CheckoutPage } from '../../pages/CheckoutPage';
 
-const VALID_USER     = 'standard_user';
-const VALID_PASSWORD = 'secret_sauce';
-const FIRST_NAME     = 'John';
-const LAST_NAME      = 'Doe';
-const ZIP_CODE       = '12345';
+const FIRST_NAME = 'John';
+const LAST_NAME  = 'Doe';
+const ZIP_CODE   = '12345';
 
 test.describe('Cart / Checkout', () => {
   let homePage: HomePage;
@@ -16,10 +13,7 @@ test.describe('Cart / Checkout', () => {
   let checkoutPage: CheckoutPage;
 
   test.beforeEach(async ({ page }) => {
-    const loginPage = new LoginPage(page);
-    await loginPage.navigate();
-    await loginPage.login(VALID_USER, VALID_PASSWORD);
-    await page.waitForURL(/.*inventory\.html/);
+    await page.goto('/inventory.html');
 
     homePage     = new HomePage(page);
     cartPage     = new CartPage(page);

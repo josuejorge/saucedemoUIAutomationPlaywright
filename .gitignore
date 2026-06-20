@@ -3,5 +3,6 @@ playwright-report/
 test-results/
 .playwright-cache/
 evidence/
+.auth/
 allure-results/
 allure-report/

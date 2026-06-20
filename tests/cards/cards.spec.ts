@@ -1,20 +1,13 @@
 import { test, expect } from '../../fixtures';
-import { LoginPage } from '../../pages/LoginPage';
 import { HomePage } from '../../pages/HomePage';
 import { ProductPage } from '../../pages/ProductPage';
-
-const VALID_USER     = 'standard_user';
-const VALID_PASSWORD = 'secret_sauce';
 
 test.describe('Cards / Produtos', () => {
   let homePage: HomePage;
   let productPage: ProductPage;
 
   test.beforeEach(async ({ page }) => {
-    const loginPage = new LoginPage(page);
-    await loginPage.navigate();
-    await loginPage.login(VALID_USER, VALID_PASSWORD);
-    await page.waitForURL(/.*inventory\.html/);
+    await page.goto('/inventory.html');
 
     homePage    = new HomePage(page);
     productPage = new ProductPage(page);

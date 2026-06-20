@@ -8,6 +8,9 @@ const LOCKED_USER = 'locked_out_user';
 const WRONG_PASSWORD = 'wrong_password';
 
 test.describe('Login Page', () => {
+  // testes de login precisam começar sem sessão ativa
+  test.use({ storageState: { cookies: [], origins: [] } });
+
   let loginPage: LoginPage;
 
   test.beforeEach(async ({ page }) => {
